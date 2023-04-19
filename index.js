@@ -137,6 +137,10 @@ async function main() {
                                 const newPath = path.join(`./downloads/${nameManga}/${dirPerChap}`, `${path.basename(newFilePath, '.jpg_data=net')}${newExtension}`);
                                 fs.renameSync(oldPath, newPath);
                                 console.log(`Renamed ${oldPath} to ${newPath}`);
+                                //Ngay đây bạn có thể viết code upload, vừa tải về là nó sẽ thực hiện upload, ngay khi tải hết ảnh chương
+                                //là ảnh cũng sẽ được upload lên hết, tiết kiệm được khá nhiều thời gian, nhưng có 1 vấn đề ảnh thứ tự ảnh
+                                //sẽ bị xáo trộn, tôi cũng cố thử các cách vừa tải nhanh, upload lên cloud nhanh vừa thứ tự được đảm bảo nhưng
+                                //làm hoài không ra :((
                             } else {
                                 console.log('jpg')
                             }
@@ -145,6 +149,9 @@ async function main() {
                     })
                 })
                 await Promise.all(imageDownloadPromises).then(async () => {
+                    //Bước này sẽ upload lên cloudianry theo thứ tự ảnh từ trên xuống(nói chung thứ tự ảnh trên web sao thì nó sẽ như vậy)
+                    //Có điều làm như vậy thì mất rất nhiều thời gian để upload lên cloud
+                    //Nếu muốn tiết kiếm thời gian thì xem comment ở trên xíu
                     const files = fs.readdirSync(`./downloads/${nameManga}/${dirPerChap}`);
                     for (const file of files) {
                         const publicId = path.basename(file, path.extname(file));
